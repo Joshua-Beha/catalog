@@ -54,7 +54,12 @@ spec:
         #
         copyimages() {
           filename="$(workspaces.images-url.path)/url.txt"
-          if ! [[ "$(params.multiArch)" =~ ^(system|all|index-only)$ ]]; then exit 1 ; fi
+          case "$(params.multiArch)" in all|system|index-only) 
+            ;;
+          *)
+            echo "Unrecognized multiArch choice: $(params.multiArch)"
+            exit 1;;
+          esac
           while IFS= read -r line || [ -n "$line" ]
           do
             cmd=""
