@@ -54,12 +54,6 @@ spec:
         #
         copyimages() {
           filename="$(workspaces.images-url.path)/url.txt"
-          case "$(params.multiArch)" in all|system|index-only) 
-            ;;
-          *)
-            echo "Unrecognized multiArch choice: $(params.multiArch)"
-            exit 1;;
-          esac
           while IFS= read -r line || [ -n "$line" ]
           do
             cmd=""
@@ -77,6 +71,13 @@ spec:
         #
         # If single image is to be copied then, it can be passed through
         # params in the taskrun.
+        #
+        case "$(params.multiArch)" in all|system|index-only)
+            ;;
+          *)
+            echo "Unrecognized multiArch choice: $(params.multiArch)"
+            exit 1;;
+        esac
         if [ "$(params.srcImageURL)" != "" ] && [ "$(params.destImageURL)" != "" ] ; then
           skopeo copy --multi-arch="$(params.multiArch)" "$(params.srcImageURL)" "$(params.destImageURL)" --src-tls-verify="$(params.srcTLSverify)" --dest-tls-verify="$(params.destTLSverify)"
         else
