@@ -68,9 +68,7 @@ spec:
             echo "$cmd"
           done < "$filename"
         }
-        #
-        # If single image is to be copied then, it can be passed through
-        # params in the taskrun.
+        # Check that the multiArch parm is one of the supported methods
         #
         case "$(params.multiArch)" in all|system|index-only)
             ;;
@@ -78,6 +76,10 @@ spec:
             echo "Unrecognized multiArch choice: $(params.multiArch)"
             exit 1;;
         esac
+        #
+        # If single image is to be copied then, it can be passed through
+        # params in the taskrun.
+        #
         if [ "$(params.srcImageURL)" != "" ] && [ "$(params.destImageURL)" != "" ] ; then
           skopeo copy --multi-arch="$(params.multiArch)" "$(params.srcImageURL)" "$(params.destImageURL)" --src-tls-verify="$(params.srcTLSverify)" --dest-tls-verify="$(params.destTLSverify)"
         else
